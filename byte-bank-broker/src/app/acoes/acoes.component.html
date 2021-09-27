@@ -5,7 +5,7 @@
     </div>
   </div>
   <div
-    *ngIf="acoes; else noData"
+    *ngIf="(acoes$ | async) as acoes; else noData"
     class="td-page-wrapper">
     <div
       class="po-row">
