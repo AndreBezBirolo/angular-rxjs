@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { AcoesService } from './acoes.service';
-import { debounceTime, filter, switchMap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs/operators';
 import { merge } from 'rxjs';
 
 const ESPERA_DIGITACAO = 300;
@@ -17,6 +17,7 @@ export class AcoesComponent implements OnInit {
   filtroPeloInput$ = this.acoesInput.valueChanges.pipe(
     debounceTime(ESPERA_DIGITACAO),
     filter((valorDigitado) => valorDigitado.length >= 3 || !valorDigitado.length),
+    distinctUntilChanged(),
     switchMap(valorDigitado => this.acoesService.getAcoes(valorDigitado))
   );
   acoes$ = merge(this.todasAcoes$, this.filtroPeloInput$);
