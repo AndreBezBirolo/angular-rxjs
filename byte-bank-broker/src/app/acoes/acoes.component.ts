@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { AcoesService } from './acoes.service';
-import { switchMap } from 'rxjs/operators';
+import { filter, switchMap } from 'rxjs/operators';
 import { merge } from 'rxjs';
 
 @Component({
@@ -13,6 +13,7 @@ export class AcoesComponent implements OnInit {
   acoesInput = new FormControl();
   todasAcoes$ = this.acoesService.getAcoes();
   filtroPeloInput$ = this.acoesInput.valueChanges.pipe(
+    filter((valorDigitado) => valorDigitado.length >= 3 || !valorDigitado.length),
     switchMap(valorDigitado => this.acoesService.getAcoes(valorDigitado))
   );
   acoes$ = merge(this.todasAcoes$, this.filtroPeloInput$);
